@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-stone-950 select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Expedition to the Forgotten Island - Gim 16:9 Informatika SMP Kelas 8</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    aspectRatio: {
+                        '16/9': '16 / 9',
+                    },
+                    colors: {
+                        wood: {
+                            950: '#150c07',
+                            900: '#2b180d',
+                            800: '#422817',
+                            700: '#5c3820',
+                            600: '#7a4a2a',
+                            500: '#9e633a',
+                            400: '#c28253',
+                        },
+                        parchment: {
+                            100: '#fcf6e8',
+                            200: '#f5e8ca',
+                            300: '#e8d4a2',
+                            400: '#d9ba77',
+                            900: '#2c2111',
+                        },
+                        gold: {
+                            300: '#ffe27a',
+                            400: '#ffd243',
+                            500: '#f5b812',
+                            600: '#d99800',
+                            700: '#a87100',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'Courier New', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #060504;
+            color: #f3f4f6;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, .font-title {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* RPG Bezel Outer Frame */
+        .wood-bezel {
+            background: linear-gradient(135deg, #422817 0%, #1a0e07 40%, #2b180d 70%, #422817 100%);
+            border: 5px solid #7a4a2a;
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.95), 0 20px 40px rgba(0,0,0,0.9);
+        }
+
+        .dark-hud-plaque {
+            background: linear-gradient(180deg, #2c1a0e 0%, #150c07 100%);
+            border: 2px solid #6e4122;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .stone-action-panel {
+            background: linear-gradient(180deg, #24201d 0%, #12100e 100%);
+            border-top: 3px solid #85532b;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.8);
+        }
+
+        /* Parchment Inner Quest Card */
+        .parchment-card {
+            background-color: #f5e8ca;
+            background-image: 
+                radial-gradient(rgba(100, 60, 30, 0.1) 1px, transparent 0),
+                radial-gradient(rgba(100, 60, 30, 0.1) 1px, #f5e8ca 50%);
+            background-size: 20px 20px;
+            color: #2c2111;
+            border: 3px solid #b8834d;
+            box-shadow: inset 0 0 25px rgba(80, 45, 15, 0.3), 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Adventurer Breathing & Idle Motion Animations */
+        @keyframes characterIdle {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(0.5deg); }
+        }
+        .animate-character-idle {
+            animation: characterIdle 3.5s ease-in-out infinite;
+        }
+
+        @keyframes compassPulse {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.6)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.95)); transform: scale(1.06); }
+        }
+        .animate-compass-glow {
+            animation: compassPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes characterVictory {
+            0% { transform: translateY(0) scale(1); }
+            30% { transform: translateY(-16px) scale(1.08) rotate(-3deg); }
+            60% { transform: translateY(-8px) scale(1.04) rotate(3deg); }
+            100% { transform: translateY(0) scale(1); }
+        }
+        .animate-character-cheer {
+            animation: characterVictory 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes characterFlinch {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px) rotate(-4deg); }
+            40%, 80% { transform: translateX(10px) rotate(4deg); }
+        }
+        .animate-character-flinch {
+            animation: characterFlinch 0.45s ease-in-out;
+        }
+
+        /* Damage Overlay Flash */
+        @keyframes flashRed {
+            0% { opacity: 0; }
+            50% { opacity: 0.65; }
+            100% { opacity: 0; }
+        }
+        .damage-flash {
+            animation: flashRed 0.4s ease-out forwards;
+        }
+
+        /* Torch Flame Flicker Animation */
+        @keyframes torchFlicker {
+            0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
+            50% { transform: scale(1.15) rotate(2deg); opacity: 1; }
+        }
+        .animate-torch-flame {
+            animation: torchFlicker 0.6s ease-in-out infinite alternate;
+            transform-origin: center bottom;
+        }
+
+        /* 16:9 Screen Wrapper Scale */
+        .game-aspect-wrapper {
+            width: 100%;
+            max-width: 1120px;
+            aspect-ratio: 16 / 9;
+            max-height: 95vh;
+        }
+
+        @media (max-aspect-ratio: 16/9) {
+            .game-aspect-wrapper {
+                width: 100vw;
+                height: 56.25vw;
+                max-height: 95vh;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .parchment-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .parchment-scroll::-webkit-scrollbar-track {
+            background: rgba(66, 40, 29, 0.1);
+        }
+        .parchment-scroll::-webkit-scrollbar-thumb {
+            background: #8b5a2b;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="h-screen w-screen flex items-center justify-center bg-stone-950 p-1 sm:p-2 select-none overflow-hidden">
+
+    <div class="game-aspect-wrapper relative wood-bezel rounded-2xl overflow-hidden flex flex-col justify-between shadow-2xl border-amber-900/80">
+
+        <!-- Background Image Layer with Ambient Vignette Overlay -->
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0" 
+             style="background-image: linear-gradient(to bottom, rgba(8, 6, 4, 0.65), rgba(18, 12, 8, 0.82)), url('https://i.imgur.com/qmz1yJk.jpg'), url('https://i.imgur.com/qmz1yJk.png'), radial-gradient(circle at center, #1b3820 0%, #0a150c 100%);">
+        </div>
+
+        <!-- Canvas Layer for Jungle Atmospheric Particles & Magic Sparks -->
+        <canvas id="bg-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-80"></canvas>
+        
+        <!-- Screen Damage Red Flash Overlay -->
+        <div id="damage-overlay" class="absolute inset-0 bg-red-600 pointer-events-none z-20 opacity-0"></div>
+
+        <header class="relative z-30 dark-hud-plaque px-3 py-1.5 sm:px-5 sm:py-2 flex items-center justify-between border-b-2 border-amber-800/80 shadow-lg shrink-0">
+            
+            <!-- Health Hearts Bar -->
+            <div class="flex items-center space-x-2 bg-black/50 px-2.5 py-1 rounded-lg border border-red-900/60 shadow-inner">
+                <span class="text-[9px] sm:text-[10px] text-red-300 font-black uppercase tracking-wider hidden sm:inline">Health</span>
+                <div id="hp-container" class="flex space-x-1 text-red-500 text-sm sm:text-base">
+                    <i class="fa-solid fa-heart drop-shadow-md"></i>
+                    <i class="fa-solid fa-heart drop-shadow-md"></i>
+                    <i class="fa-solid fa-heart drop-shadow-md"></i>
+                </div>
+            </div>
+
+            <!-- Location Title Badge -->
+            <div class="text-center">
+                <div class="text-[9px] sm:text-[10px] font-extrabold text-amber-400 uppercase tracking-widest leading-none">
+                    <span id="location-badge">Lokasi 1/4</span>
+                </div>
+                <h1 id="hud-location-name" class="text-xs sm:text-sm md:text-base font-black text-amber-100 tracking-wide leading-tight">
+                    Hutan Rawa Kuno
+                </h1>
+            </div>
+
+            <!-- Element Stones Slot Bar -->
+            <div class="flex items-center space-x-1 sm:space-x-2 bg-black/50 px-2 sm:px-3 py-1 rounded-lg border border-amber-900/60">
+                <span class="text-[9px] sm:text-[10px] text-amber-200/80 font-bold hidden md:inline">Element Stones:</span>
+                
+                <!-- Earth Stone -->
+                <div id="stone-1" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[10px] sm:text-xs text-neutral-600 transition-all duration-300" title="Batu Tanah">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <!-- Water Stone -->
+                <div id="stone-2" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[10px] sm:text-xs text-neutral-600 transition-all duration-300" title="Batu Air">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <!-- Wind Stone -->
+                <div id="stone-3" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[10px] sm:text-xs text-neutral-600 transition-all duration-300" title="Batu Angin">
+                    <i class="fa-solid fa-wind"></i>
+                </div>
+                <!-- Fire Stone -->
+                <div id="stone-4" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[10px] sm:text-xs text-neutral-600 transition-all duration-300" title="Batu Api">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+            </div>
+
+            <!-- Timer & Audio Control -->
+            <div class="flex items-center space-x-1.5 sm:space-x-2">
+                <button id="sound-toggle" onclick="toggleAudio()" class="text-amber-300 hover:text-amber-100 bg-amber-950/80 hover:bg-amber-900 p-1.5 rounded-lg border border-amber-700/60 transition-all text-xs" title="Buka/Tutup Suara">
+                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+
+                <div class="bg-black/60 px-2 sm:px-3 py-1 rounded-lg border border-amber-500/50 flex items-center space-x-1.5">
+                    <span class="text-[9px] text-amber-400 font-bold hidden sm:inline">Timer</span>
+                    <i class="fa-regular fa-clock text-amber-400 text-xs animate-pulse"></i>
+                    <span id="timer-display" class="font-mono text-xs sm:text-sm font-black text-amber-300">15:00</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="relative z-30 flex-1 flex items-center justify-center p-2 sm:p-3 overflow-hidden">
+            
+            <!-- VIEW 0: LOADING SCREEN -->
+            <div id="loading-screen" class="parchment-card rounded-xl p-4 sm:p-6 text-center max-w-md w-full my-auto transition-all duration-500 shadow-2xl relative overflow-hidden">
+                <div class="w-12 h-12 bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-amber-800/40">
+                    <i class="fa-solid fa-compass text-2xl text-amber-900 animate-spin" style="animation-duration: 4s;"></i>
+                </div>
+
+                <h2 class="text-sm sm:text-base font-black text-amber-950 tracking-wider mb-1">
+                    MEMUAT EKSPEDISI...
+                </h2>
+                <p id="loading-status" class="text-[10px] sm:text-xs text-stone-800 font-medium mb-3 italic">
+                    Menyusun peta kuno & sandi rahasia...
+                </p>
+
+                <div class="w-full bg-amber-950/20 rounded-full h-3 border border-amber-900/40 p-0.5 mb-3 overflow-hidden">
+                    <div id="loading-bar" class="bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-500 h-full rounded-full transition-all duration-300 w-0"></div>
+                </div>
+
+                <button id="enter-expedition-btn" onclick="finishLoadingAndShowStart()" class="hidden w-full py-2 bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 hover:from-amber-800 hover:to-amber-950 text-amber-100 font-extrabold text-xs sm:text-sm rounded-lg shadow-lg border border-amber-500 transition-all transform active:scale-95 flex items-center justify-center space-x-2">
+                    <span>MASUK KE PETUALANGAN</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- VIEW 1: START SCREEN -->
+            <div id="start-screen" class="hidden parchment-card rounded-xl p-3 sm:p-4 text-center max-w-lg w-full my-auto transition-all duration-500 shadow-2xl relative overflow-hidden">
+                <div class="inline-block p-2 bg-amber-900/15 rounded-full border border-amber-800/40 mb-1">
+                    <i class="fa-solid fa-map-location-dot text-2xl text-amber-900"></i>
+                </div>
+                
+                <h2 class="text-base sm:text-lg font-black text-amber-950 tracking-wider mb-0.5">
+                    EXPEDITION TO THE FORGOTTEN ISLAND
+                </h2>
+                
+                <p class="text-[10px] sm:text-xs text-stone-800 leading-snug font-medium mb-2.5 max-w-md mx-auto">
+                    Pintu Candi Terlupakan telah terkunci selama ribuan tahun. Bantu sang petualang memecahkan <span class="font-extrabold text-amber-900 underline">4 Sandi Elemen Konversi Bilangan</span> untuk melepaskan batu ajaib.
+                </p>
+
+                <div class="bg-amber-950/10 p-2 rounded-lg border border-amber-900/30 text-left text-[9px] sm:text-[11px] text-amber-950 space-y-1 mb-3 max-w-md mx-auto">
+                    <p class="font-bold text-amber-900"><i class="fa-solid fa-scroll mr-1"></i> Misi & Aturan Ekspedisi:</p>
+                    <ul class="list-disc list-inside space-y-0.5 text-stone-800">
+                        <li>Selesaikan 4 lokasi teka-teki konversi (total 12 segel soal).</li>
+                        <li>Dapatkan <strong>4 Batu Elemen</strong> (Tanah 🪵, Air 💧, Angin 🌪️, Api 🔥).</li>
+                        <li>Kamu memiliki <strong>3 Health ❤️</strong> dan waktu <strong>15 Menit ⏱️</strong>.</li>
+                        <li>Gunakan <strong>💡 Rumus Bantuan</strong> & <strong>🧭 Kompas Ajaib</strong> jika butuh petunjuk.</li>
+                    </ul>
+                </div>
+
+                <button id="start-btn" onclick="startGame()" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 hover:from-amber-800 hover:to-amber-950 text-amber-100 font-extrabold text-xs sm:text-sm rounded-lg shadow-lg transform hover:scale-105 active:scale-95 transition-all border border-amber-500 flex items-center justify-center space-x-2 mx-auto cursor-pointer">
+                    <span>MULAI PETUALANGAN</span>
+                    <i class="fa-solid fa-compass animate-spin" style="animation-duration: 10s;"></i>
+                </button>
+            </div>
+
+            <!-- VIEW 2: ACTIVE GAMEPLAY SPLIT SCREEN (16:9 Optimized) -->
+            <div id="game-screen" class="hidden w-full h-full flex flex-col md:flex-row gap-2 sm:gap-3 items-stretch justify-center max-w-5xl my-auto">
+                
+                <!-- LEFT COLUMN: PARCHMENT QUEST CARD & RIDDLE (55% Width) -->
+                <div class="parchment-card rounded-xl p-2.5 sm:p-3.5 flex-1 md:w-[55%] flex flex-col justify-between relative shadow-2xl">
+                    
+                    <div>
+                        <!-- Quest Card Header Bar -->
+                        <div class="flex items-center justify-between border-b border-amber-900/30 pb-1.5 mb-1.5">
+                            <div class="flex items-center space-x-2">
+                                <div id="level-badge-icon" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-900 text-amber-100 flex items-center justify-center text-xs sm:text-sm shadow border border-amber-700 shrink-0">
+                                    <i class="fa-solid fa-tree"></i>
+                                </div>
+                                <div>
+                                    <span id="question-counter-badge" class="px-1.5 py-0.2 rounded text-[8px] sm:text-[9px] font-extrabold bg-amber-900/20 text-amber-950 border border-amber-900/40">
+                                        SEGEL 1/3
+                                    </span>
+                                    <h3 id="level-title" class="text-xs sm:text-sm font-black text-amber-950 leading-tight">
+                                        Hutan Rawa Kuno
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <!-- Formula Helper Modal Trigger -->
+                            <button onclick="openFormulaModal()" class="px-2 py-1 bg-amber-800/15 hover:bg-amber-800/30 text-amber-950 font-bold text-[10px] sm:text-xs rounded-lg border border-amber-900/40 flex items-center space-x-1 transition-all shadow-sm">
+                                <i class="fa-solid fa-lightbulb text-yellow-600"></i>
+                                <span>💡 Rumus Bantuan</span>
+                            </button>
+                        </div>
+
+                        <!-- Story Narrative Box -->
+                        <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20 mb-2">
+                            <p id="story-text" class="text-[10px] sm:text-xs text-stone-900 leading-snug font-medium italic">
+                                "Di balik rawa berlumut ini, tersimpan Segel Tanah yang legendaris..."
+                            </p>
+                        </div>
+
+                        <!-- Main Challenge Box -->
+                        <div class="bg-gradient-to-br from-neutral-950 via-stone-900 to-amber-950 text-amber-100 p-2.5 sm:p-3 rounded-xl shadow-lg border border-amber-600/80 text-center relative overflow-hidden mb-1.5">
+                            <span id="challenge-step-title" class="text-[8px] sm:text-[9px] font-extrabold text-amber-400 uppercase tracking-widest block mb-0.5">
+                                TEKA-TEKI KONVERSI BILANGAN
+                            </span>
+
+                            <div id="question-prompt" class="text-xs sm:text-sm md:text-base font-black text-amber-100 leading-snug my-1">
+                                Konversikan Bilangan Desimal berikut ke Biner untuk Membuka Jalan:
+                                <div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 13</div>
+                            </div>
+
+                            <p id="question-subtext" class="text-[8px] sm:text-[9px] text-amber-300/80 font-mono">
+                                (Sistem Bilangan Basis 10 ➔ Basis 2)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Feedback Banner Box -->
+                    <div id="feedback-box" class="hidden p-1 rounded-lg text-[10px] font-bold text-center transition-all duration-300">
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: ANIMATED ADVENTURER & ANCIENT TEMPLE SCENE (45% Width) -->
+                <div class="dark-hud-plaque rounded-xl p-2 sm:p-2.5 md:w-[45%] flex flex-col items-center justify-between relative shadow-2xl border-2 border-amber-800/80 overflow-hidden min-h-[200px]">
+                    
+                    <!-- Scene Ambient Title Badge -->
+                    <div class="w-full flex items-center justify-between text-[9px] sm:text-[10px] text-amber-300 font-extrabold border-b border-amber-800/50 pb-1 mb-1 shrink-0">
+                        <span id="character-status-text" class="text-emerald-400 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Petualang Siap!
+                        </span>
+                        <span class="text-amber-400/80"><i class="fa-solid fa-torii-gate mr-1"></i>Gerbang Candi</span>
+                    </div>
+
+                    <!-- Interactive Animated Vector Canvas Scene -->
+                    <div id="scene-container" class="relative w-full flex-1 flex items-center justify-center overflow-hidden my-auto py-1">
+                        
+                        <!-- SVG Temple Gate & Adventurer Character -->
+                        <svg id="adventurer-svg" class="w-full h-auto max-h-[180px] sm:max-h-[210px] drop-shadow-2xl" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                            
+                            <!-- Background Temple Stone Wall Texture & Runes -->
+                            <rect x="0" y="0" width="400" height="200" rx="10" fill="#140e0a"/>
+                            <!-- Stone Wall Brick Lines -->
+                            <path d="M 0 50 L 400 50 M 0 100 L 400 100 M 0 150 L 400 150" stroke="#2c1a0e" stroke-width="1.5" stroke-dasharray="20,10"/>
+                            <path d="M 80 0 L 80 50 M 200 0 L 200 50 M 320 0 L 320 50" stroke="#2c1a0e" stroke-width="1.5"/>
+                            <path d="M 40 50 L 40 100 M 160 50 L 160 100 M 280 50 L 280 100" stroke="#2c1a0e" stroke-width="1.5"/>
+                            <path d="M 100 100 L 100 150 M 220 100 L 220 150 M 340 100 L 340 150" stroke="#2c1a0e" stroke-width="1.5"/>
+
+                            <!-- Ground Stone Floor -->
+                            <path d="M 0 170 L 400 170 L 400 200 L 0 200 Z" fill="#24170f" stroke="#422817" stroke-width="2"/>
+                            <path d="M 0 170 L 400 170" stroke="#7a4a2a" stroke-width="2"/>
+
+                            <!-- Burning Wall Torches -->
+                            <!-- Left Torch -->
+                            <g transform="translate(20, 50)">
+                                <rect x="-3" y="10" width="6" height="25" fill="#422817" stroke="#231309"/>
+                                <path d="M -6 10 L 6 10 L 4 0 L -4 0 Z" fill="#85532b"/>
+                                <path class="animate-torch-flame" d="M 0 -20 C -8 -5 -5 5 0 5 C 5 5 8 -5 0 -20 Z" fill="#ff9800"/>
+                                <path class="animate-torch-flame" d="M 0 -14 C -4 -3 -3 3 0 3 C 3 3 4 -3 0 -14 Z" fill="#ffeb3b"/>
+                                <circle cx="0" cy="-5" r="18" fill="#ff9800" opacity="0.15"/>
+                            </g>
+
+                            <!-- Right Torch -->
+                            <g transform="translate(380, 50)">
+                                <rect x="-3" y="10" width="6" height="25" fill="#422817" stroke="#231309"/>
+                                <path d="M -6 10 L 6 10 L 4 0 L -4 0 Z" fill="#85532b"/>
+                                <path class="animate-torch-flame" d="M 0 -20 C -8 -5 -5 5 0 5 C 5 5 8 -5 0 -20 Z" fill="#ff9800"/>
+                                <path class="animate-torch-flame" d="M 0 -14 C -4 -3 -3 3 0 3 C 3 3 4 -3 0 -14 Z" fill="#ffeb3b"/>
+                                <circle cx="0" cy="-5" r="18" fill="#ff9800" opacity="0.15"/>
+                            </g>
+
+                            <!-- Temple Stone Archway (Right Side) -->
+                            <g id="temple-arch">
+                                <path d="M 260 170 L 260 80 C 260 35 340 35 340 80 L 340 170 Z" fill="#1c120c" stroke="#5c3820" stroke-width="5"/>
+                                <path d="M 275 170 L 275 90 C 275 52 325 52 325 90 L 325 170 Z" fill="#0a0604" stroke="#3d2415" stroke-width="2"/>
+                                
+                                <!-- Temple Elemental Gem Slot -->
+                                <circle id="temple-gem-slot" cx="300" cy="55" r="12" fill="#2a1f18" stroke="#ffd243" stroke-width="2.5"/>
+                                <path id="temple-gem-icon" d="M 300 48 L 306 55 L 300 62 L 294 55 Z" fill="#66503b"/>
+
+                                <!-- Locked Padlock on Gate -->
+                                <g id="temple-lock">
+                                    <rect x="293" y="115" width="14" height="16" rx="3" fill="#d99800" stroke="#7a4a2a" stroke-width="2"/>
+                                    <path d="M 296 115 C 296 108 304 108 304 115" stroke="#ffe27a" stroke-width="2.5" fill="none"/>
+                                    <circle cx="300" cy="121" r="2" fill="#2c1a0e"/>
+                                </g>
+                            </g>
+
+                            <!-- Energy Magical Rays (Active on correct answer) -->
+                            <path id="energy-beam" d="M 160 95 L 300 55" stroke="#38bdf8" stroke-width="3.5" stroke-dasharray="5,5" opacity="0"/>
+
+                            <!-- ANIMATED ADVENTURER CHARACTER GROUP -->
+                            <g id="character-group" class="animate-character-idle" transform="translate(30, 0)">
+                                
+                                <!-- Shadow beneath Adventurer -->
+                                <ellipse cx="110" cy="173" rx="32" ry="6" fill="#000000" opacity="0.6"/>
+
+                                <!-- Backpack -->
+                                <rect x="68" y="90" width="20" height="34" rx="5" fill="#5c3820" stroke="#3a2212" stroke-width="2.5"/>
+                                <rect x="65" y="82" width="26" height="10" rx="3" fill="#7a4a2a" stroke="#3a2212" stroke-width="2"/>
+
+                                <!-- Legs & Boots -->
+                                <path d="M 98 135 L 94 168 L 82 171" stroke="#422817" stroke-width="9" stroke-linecap="round"/>
+                                <path d="M 118 135 L 122 168 L 134 171" stroke="#422817" stroke-width="9" stroke-linecap="round"/>
+                                <!-- Boots -->
+                                <path d="M 80 165 L 96 165 L 96 173 L 78 173 Z" fill="#1f110a"/>
+                                <path d="M 120 165 L 136 165 L 136 173 L 118 173 Z" fill="#1f110a"/>
+
+                                <!-- Explorer Shorts & Shirt Body -->
+                                <path d="M 92 120 L 124 120 L 128 142 L 88 142 Z" fill="#4a5d31" stroke="#283518" stroke-width="2"/>
+                                <path d="M 86 82 L 130 82 L 125 124 L 90 124 Z" fill="#d9ba77" stroke="#7a5c28" stroke-width="2.5"/>
+                                <path d="M 103 82 L 103 124" stroke="#7a5c28" stroke-width="2"/>
+
+                                <!-- Left Arm Holding Backpack Strap -->
+                                <path d="M 90 86 Q 78 102 88 114" stroke="#e8b88a" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+                                <!-- Head & Hair -->
+                                <circle cx="108" cy="60" r="16" fill="#f2c49b"/>
+                                <path d="M 92 57 C 90 39 123 37 124 55 C 130 57 126 71 118 68 C 108 71 94 71 92 57 Z" fill="#4a2a18"/>
+                                <circle cx="87" cy="53" r="8" fill="#4a2a18"/>
+
+                                <!-- Adventurer Explorer Hat -->
+                                <path d="M 84 48 L 132 48" stroke="#9e633a" stroke-width="5" stroke-linecap="round"/>
+                                <path d="M 92 48 Q 108 28 124 48 Z" fill="#c28253" stroke="#7a4a2a" stroke-width="2"/>
+                                <rect x="92" y="44" width="32" height="4" fill="#4a2a18"/>
+
+                                <!-- Face Features (Eyes & Smile) -->
+                                <circle cx="115" cy="58" r="2.2" fill="#2c1a0e"/>
+                                <path d="M 111 65 Q 115 69 120 65" stroke="#854625" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+                                <!-- Right Arm Extended Holding Glowing Compass -->
+                                <g id="arm-compass-group">
+                                    <path d="M 120 90 L 142 98 L 158 92" stroke="#e8b88a" stroke-width="6" stroke-linecap="round" fill="none"/>
+                                    <!-- Compass in hand -->
+                                    <circle cx="163" cy="92" r="10" fill="#f5b812" stroke="#a87100" stroke-width="2" class="animate-compass-glow"/>
+                                    <circle cx="163" cy="92" r="7" fill="#0284c7"/>
+                                    <path d="M 163 87 L 165 92 L 163 97 L 161 92 Z" fill="#ffffff"/>
+                                </g>
+
+                            </g>
+                        </svg>
+
+                    </div>
+
+                    <!-- Character Speech Hint Ribbon -->
+                    <div class="w-full bg-black/60 p-1.5 rounded-lg border border-amber-800/60 text-center shrink-0">
+                        <span id="character-speech-bubble" class="text-[9px] sm:text-[10px] text-amber-200 font-medium italic">
+                            "Kompas kuno ini merespons kode angka konversi!"
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+        <footer id="action-panel" class="hidden relative z-30 stone-action-panel px-3 py-2 sm:px-5 sm:py-2.5 shrink-0">
+            <form id="answer-form" onsubmit="handleAnswerSubmit(event)" class="max-w-3xl mx-auto space-y-1.5">
+                <div class="flex items-center gap-2">
+                    
+                    <!-- Text Answer Input Field -->
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-amber-500">
+                            <i class="fa-solid fa-key text-xs sm:text-sm"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="answer-input" 
+                            placeholder="Masukkan Jawaban (Angka)..." 
+                            autocomplete="off"
+                            class="w-full pl-8 pr-3 py-1.5 sm:py-2 bg-neutral-900/90 text-amber-100 placeholder-amber-700/60 font-mono text-xs sm:text-sm font-bold rounded-xl border-2 border-amber-700/70 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all shadow-inner"
+                        >
+                    </div>
+
+                    <!-- Submit / Execute Button -->
+                    <button 
+                        type="submit" 
+                        class="px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-amber-950 font-black text-xs sm:text-sm rounded-xl shadow-lg border-2 border-yellow-300 transition-all transform active:scale-95 flex items-center justify-center space-x-1.5 shrink-0 cursor-pointer"
+                    >
+                        <i class="fa-solid fa-rocket"></i>
+                        <span>KIRIM KODE / EKSEKUSI</span>
+                    </button>
+                </div>
+
+                <!-- Power-up Compass Hint & Instructions -->
+                <div class="flex items-center justify-between">
+                    <button 
+                        type="button" 
+                        onclick="useCompassHint()" 
+                        class="text-[10px] sm:text-xs font-extrabold text-amber-300 hover:text-amber-100 bg-amber-950/80 hover:bg-amber-900 px-2.5 py-1 rounded-lg border border-amber-600/60 transition-all flex items-center space-x-1.5 shadow-md"
+                    >
+                        <i class="fa-solid fa-compass text-sky-400 text-xs animate-spin" style="animation-duration: 12s;"></i>
+                        <span>🧭 Kompas Ajaib (Hint)</span>
+                    </button>
+
+                    <span class="text-[9px] sm:text-[10px] text-amber-400/80 font-semibold italic">
+                        Ketik hasil konversi lalu tekan Enter / Kirim Kode
+                    </span>
+                </div>
+            </form>
+        </footer>
+
+        <!-- MODAL 1: FORMULA HELPER MODAL -->
+        <div id="formula-modal" class="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 hidden">
+            <div class="parchment-card rounded-xl max-w-lg w-full max-h-[90%] overflow-y-auto p-3.5 sm:p-4 relative shadow-2xl border-2 border-amber-800 parchment-scroll">
+                <button onclick="closeFormulaModal()" class="absolute top-2 right-2 text-amber-900 hover:text-red-700 text-lg font-black w-6 h-6 rounded-full bg-amber-900/10 flex items-center justify-center">
+                    &times;
+                </button>
+
+                <div class="flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-book-bookmark text-lg text-amber-900"></i>
+                    <h3 class="text-xs sm:text-base font-black text-amber-950">💡 Panduan Rumus Konversi Bilangan</h3>
+                </div>
+
+                <hr class="border-amber-900/30 mb-2">
+
+                <div class="space-y-2 text-[10px] sm:text-xs text-stone-900">
+                    <!-- 1. Desimal ke Biner -->
+                    <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20">
+                        <h4 class="font-bold text-amber-950 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-right-arrow-left text-amber-800"></i> 1. Desimal ke Biner (Basis 10 ➔ Basis 2)
+                        </h4>
+                        <p class="mt-0.5">Bagi angka desimal dengan <strong>2</strong> berulang kali hingga 0. Catat sisa pembagian dari <strong>bawah ke atas</strong>.</p>
+                        <div class="mt-0.5 font-mono bg-amber-950/10 p-1 rounded text-[10px]">
+                            Contoh: 13 ÷ 2 = 6 (sisa 1) | 6 ÷ 2 = 3 (sisa 0) | 3 ÷ 2 = 1 (sisa 1) | 1 ÷ 2 = 0 (sisa 1) ➔ <strong>1101</strong>
+                        </div>
+                    </div>
+
+                    <!-- 2. Desimal ke Oktal -->
+                    <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20">
+                        <h4 class="font-bold text-amber-950 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-right-arrow-left text-amber-800"></i> 2. Desimal ke Oktal (Basis 10 ➔ Basis 8)
+                        </h4>
+                        <p class="mt-0.5">Bagi angka desimal dengan <strong>8</strong> berulang kali hingga 0. Catat sisa pembagian dari <strong>bawah ke atas</strong>.</p>
+                        <div class="mt-0.5 font-mono bg-amber-950/10 p-1 rounded text-[10px]">
+                            Contoh: 75 ÷ 8 = 9 (sisa 3) | 9 ÷ 8 = 1 (sisa 1) | 1 ÷ 8 = 0 (sisa 1) ➔ <strong>113</strong>
+                        </div>
+                    </div>
+
+                    <!-- 3. Biner ke Desimal -->
+                    <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20">
+                        <h4 class="font-bold text-amber-950 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-right-arrow-left text-amber-800"></i> 3. Biner ke Desimal (Basis 2 ➔ Basis 10)
+                        </h4>
+                        <p class="mt-0.5">Kalikan tiap digit dari kanan dengan perpangkatan 2 (2⁰, 2¹, 2², 2³...), lalu jumlahkan.</p>
+                        <div class="mt-0.5 font-mono bg-amber-950/10 p-1 rounded text-[10px]">
+                            Contoh 1011₂ = (1×8) + (0×4) + (1×2) + (1×1) = 8 + 0 + 2 + 1 = <strong>11</strong>
+                        </div>
+                    </div>
+
+                    <!-- 4. Oktal ke Desimal -->
+                    <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20">
+                        <h4 class="font-bold text-amber-950 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-right-arrow-left text-amber-800"></i> 4. Oktal ke Desimal (Basis 8 ➔ Basis 10)
+                        </h4>
+                        <p class="mt-0.5">Kalikan tiap digit dari kanan dengan perpangkatan 8 (8⁰, 8¹...), lalu jumlahkan.</p>
+                        <div class="mt-0.5 font-mono bg-amber-950/10 p-1 rounded text-[10px]">
+                            Contoh 42₈ = (4×8) + (2×1) = 32 + 2 = <strong>34</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-center">
+                    <button onclick="closeFormulaModal()" class="px-4 py-1.5 bg-amber-900 text-amber-100 font-bold rounded-lg hover:bg-amber-950 transition-all text-xs">
+                        Kembali ke Permainan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 2: COMPASS HINT MODAL -->
+        <div id="hint-modal" class="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 hidden">
+            <div class="parchment-card rounded-xl max-w-xs w-full p-3.5 sm:p-4 relative shadow-2xl border-2 border-amber-800 text-center">
+                <div class="w-10 h-10 bg-amber-900/15 rounded-full flex items-center justify-center mx-auto mb-1.5 border border-amber-800/40">
+                    <i class="fa-solid fa-compass text-xl text-amber-900 animate-spin" style="animation-duration: 8s;"></i>
+                </div>
+                <h3 class="text-xs sm:text-sm font-black text-amber-950 mb-0.5">Petunjuk Kompas Ajaib</h3>
+                
+                <div id="hint-content" class="bg-amber-900/10 p-2 rounded-lg text-[10px] sm:text-xs text-stone-800 my-2 text-left font-mono leading-relaxed border border-amber-900/20">
+                    <!-- Dynamic hint content -->
+                </div>
+
+                <button onclick="closeHintModal()" class="w-full py-1.5 bg-amber-900 hover:bg-amber-950 text-amber-100 font-bold rounded-lg text-xs transition-all">
+                    Terima Kasih, Kompas!
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL 3: LEVEL VICTORY MODAL -->
+        <div id="level-success-modal" class="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 hidden">
+            <div class="parchment-card rounded-xl max-w-sm w-full p-4 text-center relative shadow-2xl border-2 border-amber-500 my-auto">
+                <div id="success-stone-icon" class="w-12 h-12 bg-amber-900 text-yellow-300 rounded-xl flex items-center justify-center text-2xl mx-auto mb-2 border border-yellow-500 shadow-lg animate-bounce">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+
+                <h3 class="text-base sm:text-lg font-black text-amber-950 mb-0.5">KODE BENAR!</h3>
+                <p id="success-stone-name" class="text-[10px] sm:text-xs font-extrabold text-amber-800 uppercase tracking-wider mb-2">
+                    Kamu Mendapatkan Batu Elemen Tanah!
+                </p>
+
+                <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20 text-stone-800 text-[10px] sm:text-xs mb-3 italic">
+                    <p id="success-story-message">
+                        "Prasasti batu menyala terang dengan energi kuno. Jalur rawa terbuka..."
+                    </p>
+                </div>
+
+                <button onclick="nextLevel()" class="w-full py-2 bg-gradient-to-r from-emerald-700 to-green-800 hover:from-emerald-800 hover:to-green-900 text-white font-extrabold text-xs rounded-lg shadow-md border border-emerald-400 transition-all transform active:scale-95">
+                    LANJUT KE LOKASI BERIKUTNYA ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL 4: GAME OVER MODAL -->
+        <div id="game-over-modal" class="absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-3 hidden">
+            <div class="dark-hud-plaque rounded-xl max-w-xs w-full p-4 text-center relative shadow-2xl border-2 border-red-800 my-auto">
+                <div class="w-12 h-12 bg-red-950 text-red-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-2 border border-red-700">
+                    <i class="fa-solid fa-skull-crossbones"></i>
+                </div>
+
+                <h3 class="text-lg font-black text-red-500 mb-0.5 font-title tracking-wider">GAME OVER</h3>
+                <p id="game-over-reason" class="text-[10px] sm:text-xs text-stone-300 mb-3 leading-snug">
+                    Jebakan kuno terpicu! Health ekspedisimu telah habis.
+                </p>
+
+                <button onclick="resetGame()" class="w-full py-2 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-extrabold text-xs rounded-lg shadow-md border border-red-500 transition-all flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>ULANGI EKSPEDISI</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL 5: FINAL GRAND VICTORY MODAL -->
+        <div id="final-victory-modal" class="absolute inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-3 hidden">
+            <div class="parchment-card rounded-xl max-w-md w-full p-4 text-center relative shadow-2xl border-2 border-amber-400 my-auto">
+                
+                <div class="inline-block p-2 bg-amber-900/15 rounded-full border border-amber-800/40 mb-1.5">
+                    <i class="fa-solid fa-crown text-2xl text-yellow-600 animate-pulse"></i>
+                </div>
+
+                <h2 class="text-lg sm:text-2xl font-black text-amber-950 tracking-tight mb-0.5">
+                    PINTU CANDI TERBUKA!
+                </h2>
+                <p class="text-[10px] sm:text-xs font-extrabold text-emerald-800 uppercase tracking-widest mb-2">
+                    Misi Ekspedisi Berhasil 100%!
+                </p>
+
+                <p class="text-[10px] sm:text-xs text-stone-800 leading-snug font-medium mb-3">
+                    Dengan 4 Batu Elemen (Tanah, Air, Angin, Api), kamu berhasil menguasai konversi bilangan kuno dan membuka Gerbang Utama Candi Informatika!
+                </p>
+
+                <div class="grid grid-cols-2 gap-2 mb-3 text-left">
+                    <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20">
+                        <span class="text-[9px] text-amber-900/80 font-bold block">SISA WAKTU:</span>
+                        <span id="final-time-stat" class="text-xs sm:text-sm font-mono font-black text-amber-950">12:45</span>
+                    </div>
+                    <div class="bg-amber-900/10 p-2 rounded-lg border border-amber-900/20">
+                        <span class="text-[9px] text-amber-900/80 font-bold block">SISA HEALTH:</span>
+                        <span id="final-hp-stat" class="text-xs sm:text-sm font-black text-red-700">❤️❤️❤️ (3/3)</span>
+                    </div>
+                </div>
+
+                <button onclick="resetGame()" class="w-full py-2.5 bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-amber-100 font-black text-xs sm:text-sm rounded-lg shadow-lg border border-amber-500 hover:from-amber-800 hover:to-amber-950 transition-all">
+                    MAIN LAGI / ULANGI PETUALANGAN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           AUDIO SYNTHESIZER (Web Audio API - Pure Sound FX)
+           ========================================================================== */
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function toggleAudio() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('sound-icon');
+            if (isMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-400';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-300';
+                playBeep(600, 0.08);
+            }
+        }
+
+        function playBeep(freq = 440, duration = 0.1, type = 'sine') {
+            if (isMuted) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.error("Audio error", e);
+            }
+        }
+
+        function playSuccessFanfare() {
+            if (isMuted) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
+                setTimeout(() => {
+                    playBeep(freq, 0.22, 'triangle');
+                }, idx * 110);
+            });
+        }
+
+        function playErrorSound() {
+            if (isMuted) return;
+            playBeep(180, 0.25, 'sawtooth');
+            setTimeout(() => playBeep(130, 0.25, 'sawtooth'), 130);
+        }
+
+        /* ==========================================================================
+           GAME DATA & MULTI-QUESTION LEVEL DEFINITIONS (12 TOTAL QUESTIONS)
+           ========================================================================== */
+        const LEVELS = [
+            {
+                id: 1,
+                location: "Hutan Rawa Kuno",
+                stoneName: "Batu Elemen Tanah 🪵",
+                stoneIcon: "fa-earth-americas",
+                stoneColor: "#9e633a",
+                badgeIcon: "fa-tree",
+                story: '"Di balik rawa berlumut ini, tersimpan Segel Tanah yang legendaris. Legenda mengatakan hanya mereka yang menguasai kode kuno yang bisa melintasinya."',
+                questions: [
+                    {
+                        prompt: 'Konversikan Bilangan Desimal berikut ke Biner:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 13</div>',
+                        subtext: '(Sistem Bilangan Basis 10 ➔ Basis 2)',
+                        answer: '1101',
+                        hint: 'Petunjuk Kompas:\n13÷2 = 6 (sisa 1)\n6÷2 = 3 (sisa 0)\n3÷2 = 1 (sisa 1)\n1÷2 = 0 (sisa 1)\n\nSisa dari bawah ke atas: 1101'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Desimal berikut ke Biner:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 25</div>',
+                        subtext: '(Sistem Bilangan Basis 10 ➔ Basis 2)',
+                        answer: '11001',
+                        hint: 'Petunjuk Kompas:\n25÷2 = 12 (sisa 1)\n12÷2 = 6 (sisa 0)\n6÷2 = 3 (sisa 0)\n3÷2 = 1 (sisa 1)\n1÷2 = 0 (sisa 1)\n\nSisa dari bawah ke atas: 11001'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Desimal berikut ke Biner:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 45</div>',
+                        subtext: '(Sistem Bilangan Basis 10 ➔ Basis 2)',
+                        answer: '101101',
+                        hint: 'Petunjuk Kompas:\n45÷2 = 22 (sisa 1)\n22÷2 = 11 (sisa 0)\n11÷2 = 5 (sisa 1)\n5÷2 = 2 (sisa 1)\n2÷2 = 1 (sisa 0)\n1÷2 = 0 (sisa 1)\n\nSisa dari bawah ke atas: 101101'
+                    }
+                ],
+                successMsg: '"Seluruh 3 Segel Rawa terbuka! Prasasti batu bersinar dengan energi Tanah!"'
+            },
+            {
+                id: 2,
+                location: "Sungai Beracun",
+                stoneName: "Batu Elemen Air 💧",
+                stoneIcon: "fa-droplet",
+                stoneColor: "#38bdf8",
+                badgeIcon: "fa-skull-crossbones",
+                story: '"Jembatan terangkat oleh 3 Pilar Oktal. Pecahkan ketiga angka oktal untuk menetralkan air sungai dan menurunkan jembatan!"',
+                questions: [
+                    {
+                        prompt: 'Konversikan Bilangan Desimal berikut ke Oktal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 52</div>',
+                        subtext: '(Sistem Bilangan Basis 10 ➔ Basis 8)',
+                        answer: '64',
+                        hint: 'Petunjuk Kompas:\n52 ÷ 8 = 6 (sisa 4)\n6 ÷ 8 = 0 (sisa 6)\n\nSisa dari bawah ke atas: 64'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Desimal berikut ke Oktal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 78</div>',
+                        subtext: '(Sistem Bilangan Basis 10 ➔ Basis 8)',
+                        answer: '116',
+                        hint: 'Petunjuk Kompas:\n78 ÷ 8 = 9 (sisa 6)\n9 ÷ 8 = 1 (sisa 1)\n1 ÷ 8 = 0 (sisa 1)\n\nSisa dari bawah ke atas: 116'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Desimal berikut ke Oktal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 94</div>',
+                        subtext: '(Sistem Bilangan Basis 10 ➔ Basis 8)',
+                        answer: '136',
+                        hint: 'Petunjuk Kompas:\n94 ÷ 8 = 11 (sisa 6)\n11 ÷ 8 = 1 (sisa 3)\n1 ÷ 8 = 0 (sisa 1)\n\nSisa dari bawah ke atas: 136'
+                    }
+                ],
+                successMsg: '"Air sungai beracun mendidih netral. Batu Elemen Air berhasil didapatkan!"'
+            },
+            {
+                id: 3,
+                location: "Reruntuhan Kuno",
+                stoneName: "Batu Elemen Angin 🌪️",
+                stoneIcon: "fa-wind",
+                stoneColor: "#2dd4bf",
+                badgeIcon: "fa-gavel",
+                story: '"Di dalam reruntuhan, ukiran biner memancar redup. Terjemahkan 3 kode biner ke desimal untuk membangkitkan badai suci!"',
+                questions: [
+                    {
+                        prompt: 'Konversikan Bilangan Biner berikut ke Desimal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 1011₂</div>',
+                        subtext: '(Sistem Bilangan Basis 2 ➔ Basis 10)',
+                        answer: '11',
+                        hint: 'Petunjuk Kompas:\n(1×8) + (0×4) + (1×2) + (1×1) = 8 + 0 + 2 + 1 = 11'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Biner berikut ke Desimal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 1110₂</div>',
+                        subtext: '(Sistem Bilangan Basis 2 ➔ Basis 10)',
+                        answer: '14',
+                        hint: 'Petunjuk Kompas:\n(1×8) + (1×4) + (1×2) + (0×1) = 8 + 4 + 2 + 0 = 14'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Biner berikut ke Desimal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 10111₂</div>',
+                        subtext: '(Sistem Bilangan Basis 2 ➔ Basis 10)',
+                        answer: '23',
+                        hint: 'Petunjuk Kompas:\n(1×16) + (0×8) + (1×4) + (1×2) + (1×1) = 16 + 0 + 4 + 2 + 1 = 23'
+                    }
+                ],
+                successMsg: '"Angin kencang membersihkan debu kuil. Batu Elemen Angin melayang ke genggamanmu!"'
+            },
+            {
+                id: 4,
+                location: "Gerbang Utama Candi",
+                stoneName: "Batu Elemen Api 🔥",
+                stoneIcon: "fa-fire",
+                stoneColor: "#f87171",
+                badgeIcon: "fa-torii-gate",
+                story: '"Gerbang Utama berdiri megah! Buka 3 Kunci Oktal Terakhir untuk menyalakan Api Abadi dan membuka Candi!"',
+                questions: [
+                    {
+                        prompt: 'Konversikan Bilangan Oktal berikut ke Desimal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 34₈</div>',
+                        subtext: '(Sistem Bilangan Basis 8 ➔ Basis 10)',
+                        answer: '28',
+                        hint: 'Petunjuk Kompas:\n(3 × 8) + (4 × 1) = 24 + 4 = 28'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Oktal berikut ke Desimal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 52₈</div>',
+                        subtext: '(Sistem Bilangan Basis 8 ➔ Basis 10)',
+                        answer: '42',
+                        hint: 'Petunjuk Kompas:\n(5 × 8) + (2 × 1) = 40 + 2 = 42'
+                    },
+                    {
+                        prompt: 'Konversikan Bilangan Oktal berikut ke Desimal:<br><div class="mt-1 text-sm sm:text-lg text-yellow-300 font-extrabold">Soal: 65₈</div>',
+                        subtext: '(Sistem Bilangan Basis 8 ➔ Basis 10)',
+                        answer: '53',
+                        hint: 'Petunjuk Kompas:\n(6 × 8) + (5 × 1) = 48 + 5 = 53'
+                    }
+                ],
+                successMsg: '"Segel Api menyala megah! Keempat batu elemen bersinar terang. Gerbang Candi Terbuka!"'
+            }
+        ];
+
+        let currentLevelIdx = 0;
+        let currentQuestionIdx = 0;
+        let hp = 3;
+        let totalSeconds = 15 * 60; // 15 Minutes
+        let timerInterval = null;
+        let gameActive = false;
+
+        /* Loading Screen Logic */
+        function simulateLoading() {
+            const bar = document.getElementById('loading-bar');
+            const status = document.getElementById('loading-status');
+            const enterBtn = document.getElementById('enter-expedition-btn');
+
+            const steps = [
+                { percent: '30%', text: 'Membaca peta kuno dan kompas...' },
+                { percent: '65%', text: 'Menyiapkan teka-teki konversi bilangan...' },
+                { percent: '90%', text: 'Menyiapkan energi batu elemen...' },
+                { percent: '100%', text: 'Ekspedisi Siap! Siapkan mental petualangmu!' }
+            ];
+
+            let stepIdx = 0;
+            const interval = setInterval(() => {
+                if (stepIdx < steps.length) {
+                    bar.style.width = steps[stepIdx].percent;
+                    status.innerText = steps[stepIdx].text;
+                    stepIdx++;
+                } else {
+                    clearInterval(interval);
+                    status.innerHTML = '<span class="text-emerald-950 font-bold">✔ Seluruh Persiapan Selesai!</span>';
+                    enterBtn.classList.remove('hidden');
+                }
+            }, 500);
+        }
+
+        function finishLoadingAndShowStart() {
+            playBeep(520, 0.15);
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        function startGame() {
+            initAudio();
+            playBeep(520, 0.15);
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('action-panel').classList.remove('hidden');
+
+            currentLevelIdx = 0;
+            currentQuestionIdx = 0;
+            hp = 3;
+            totalSeconds = 15 * 60;
+            gameActive = true;
+
+            updateHpUI();
+            updateStonesUI();
+            loadLevelUI();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                totalSeconds--;
+                if (totalSeconds <= 0) {
+                    totalSeconds = 0;
+                    updateTimerUI();
+                    triggerGameOver("Waktu ekspedisi 15 menit telah habis!");
+                    return;
+                }
+                updateTimerUI();
+            }, 1000);
+            updateTimerUI();
+        }
+
+        function updateTimerUI() {
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            document.getElementById('timer-display').innerText = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateHpUI() {
+            const hpContainer = document.getElementById('hp-container');
+            hpContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const heart = document.createElement('i');
+                if (i < hp) {
+                    heart.className = 'fa-solid fa-heart drop-shadow-md';
+                } else {
+                    heart.className = 'fa-solid fa-heart text-neutral-700 opacity-40';
+                }
+                hpContainer.appendChild(heart);
+            }
+        }
+
+        function updateStonesUI() {
+            for (let i = 1; i <= 4; i++) {
+                const stoneElem = document.getElementById(`stone-${i}`);
+                if (i - 1 < currentLevelIdx) {
+                    stoneElem.className = 'w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-amber-300 to-yellow-500 border-2 border-yellow-200 flex items-center justify-center text-xs text-amber-950 font-black shadow-lg';
+                } else if (i - 1 === currentLevelIdx) {
+                    stoneElem.className = 'w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-neutral-900 border-2 border-amber-400 flex items-center justify-center text-xs text-amber-400 animate-pulse';
+                } else {
+                    stoneElem.className = 'w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-xs text-neutral-600 opacity-50';
+                }
+            }
+        }
+
+        function showFeedback(msg, styleClasses) {
+            const fb = document.getElementById('feedback-box');
+            if (!fb) return;
+            fb.className = `p-1 rounded-lg text-[10px] font-bold text-center transition-all duration-300 ${styleClasses}`;
+            fb.innerHTML = msg;
+            fb.classList.remove('hidden');
+        }
+
+        function hideFeedback() {
+            const fb = document.getElementById('feedback-box');
+            if (!fb) return;
+            fb.classList.add('hidden');
+            fb.innerHTML = '';
+        }
+
+        function loadLevelUI() {
+            const level = LEVELS[currentLevelIdx];
+            const q = level.questions[currentQuestionIdx];
+            
+            document.getElementById('location-badge').innerText = `Lokasi ${level.id}/4`;
+            document.getElementById('hud-location-name').innerText = level.location;
+            document.getElementById('question-counter-badge').innerText = `SEGEL ${currentQuestionIdx + 1}/${level.questions.length}`;
+            document.getElementById('level-title').innerText = level.location;
+            document.getElementById('story-text').innerHTML = level.story;
+            document.getElementById('challenge-step-title').innerText = `TEKA-TEKI KONVERSI BILANGAN (SEGEL ${currentQuestionIdx + 1}/${level.questions.length})`;
+            
+            document.getElementById('question-prompt').innerHTML = q.prompt;
+            document.getElementById('question-subtext').innerText = q.subtext;
+
+            const badgeIcon = document.getElementById('level-badge-icon');
+            badgeIcon.innerHTML = `<i class="fa-solid ${level.badgeIcon}"></i>`;
+
+            // Reset SVG Gem slot light
+            const gemSlot = document.getElementById('temple-gem-slot');
+            const gemIcon = document.getElementById('temple-gem-icon');
+            gemSlot.setAttribute('fill', '#2a1f18');
+            gemIcon.setAttribute('fill', '#66503b');
+
+            document.getElementById('character-speech-bubble').innerText = '"Kompas kuno ini merespons kode angka konversi!"';
+            document.getElementById('character-status-text').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping mr-1"></span>Petualang Siap!';
+
+            const inputElem = document.getElementById('answer-input');
+            inputElem.value = '';
+            inputElem.focus();
+            hideFeedback();
+            updateStonesUI();
+        }
+
+        /* Interactive Character Animations */
+        function triggerCharacterSuccess() {
+            const charGroup = document.getElementById('character-group');
+            const beam = document.getElementById('energy-beam');
+            const gemSlot = document.getElementById('temple-gem-slot');
+            const gemIcon = document.getElementById('temple-gem-icon');
+
+            // Cheer animation
+            charGroup.classList.remove('animate-character-idle');
+            charGroup.classList.add('animate-character-cheer');
+
+            // Beam glow animation
+            beam.setAttribute('opacity', '1');
+            gemSlot.setAttribute('fill', '#f5b812');
+            gemIcon.setAttribute('fill', '#ffffff');
+
+            document.getElementById('character-speech-bubble').innerText = '"Luar biasa! Kode segel berhasil dipecahkan!"';
+            document.getElementById('character-status-text').innerHTML = '<span class="text-amber-300 font-extrabold">✨ Segel Terbuka!</span>';
+
+            setTimeout(() => {
+                charGroup.classList.remove('animate-character-cheer');
+                charGroup.classList.add('animate-character-idle');
+                beam.setAttribute('opacity', '0');
+            }, 1200);
+        }
+
+        function triggerCharacterDamage() {
+            const charGroup = document.getElementById('character-group');
+            charGroup.classList.remove('animate-character-idle');
+            charGroup.classList.add('animate-character-flinch');
+
+            document.getElementById('character-speech-bubble').innerText = '"Aduh! Jebakan kuno terpicu karena kode salah!"';
+            document.getElementById('character-status-text').innerHTML = '<span class="text-red-400 font-extrabold">⚠️ Terkena Jebakan!</span>';
+
+            setTimeout(() => {
+                charGroup.classList.remove('animate-character-flinch');
+                charGroup.classList.add('animate-character-idle');
+            }, 600);
+        }
+
+        function handleAnswerSubmit(event) {
+            event.preventDefault();
+            if (!gameActive) return;
+
+            const inputElem = document.getElementById('answer-input');
+            const userVal = inputElem.value.trim();
+            const currentLevel = LEVELS[currentLevelIdx];
+            const currentQuestion = currentLevel.questions[currentQuestionIdx];
+
+            if (!userVal) {
+                showFeedback("⚠️ Harap masukkan jawaban kode terlebih dahulu!", "bg-amber-500/20 text-amber-900 border border-amber-500/40");
+                playBeep(300, 0.1);
+                return;
+            }
+
+            if (userVal.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+                playBeep(800, 0.15, 'triangle');
+                triggerCharacterSuccess();
+
+                if (currentQuestionIdx + 1 < currentLevel.questions.length) {
+                    currentQuestionIdx++;
+                    showFeedback(`✨ Kode Segel ${currentQuestionIdx} Benar! Beralih ke Segel ${currentQuestionIdx + 1}...`, "bg-emerald-500/20 text-emerald-900 border border-emerald-500/40");
+                    setTimeout(() => {
+                        loadLevelUI();
+                    }, 1200);
+                } else {
+                    // Level Completed
+                    playSuccessFanfare();
+                    setTimeout(() => {
+                        showSuccessModal();
+                    }, 800);
+                }
+            } else {
+                playErrorSound();
+                triggerCharacterDamage();
+                hp--;
+                updateHpUI();
+
+                // Flash damage screen overlay
+                const dmgOverlay = document.getElementById('damage-overlay');
+                dmgOverlay.classList.add('damage-flash');
+                setTimeout(() => dmgOverlay.classList.remove('damage-flash'), 400);
+
+                // Shake input
+                inputElem.classList.add('animate-shake', 'border-red-500');
+                setTimeout(() => inputElem.classList.remove('animate-shake', 'border-red-500'), 400);
+
+                if (hp <= 0) {
+                    triggerGameOver("Kode Salah! Health ekspedisi kamu telah habis terpicu jebakan.");
+                } else {
+                    showFeedback(`❌ Kode Salah! Terkena jebakan, Health berkurang 1. (Sisa Health: ${hp})`, "bg-red-500/20 text-red-900 border border-red-500/40");
+                }
+            }
+        }
+
+        function useCompassHint() {
+            playBeep(650, 0.1);
+            const level = LEVELS[currentLevelIdx];
+            const currentQuestion = level.questions[currentQuestionIdx];
+            document.getElementById('hint-content').innerText = currentQuestion.hint;
+            document.getElementById('hint-modal').classList.remove('hidden');
+        }
+
+        function closeHintModal() {
+            playBeep(400, 0.08);
+            document.getElementById('hint-modal').classList.add('hidden');
+        }
+
+        function openFormulaModal() {
+            playBeep(600, 0.1);
+            document.getElementById('formula-modal').classList.remove('hidden');
+        }
+
+        function closeFormulaModal() {
+            playBeep(400, 0.08);
+            document.getElementById('formula-modal').classList.add('hidden');
+        }
+
+        function showSuccessModal() {
+            const level = LEVELS[currentLevelIdx];
+            document.getElementById('success-stone-name').innerText = `Kamu Mendapatkan ${level.stoneName}!`;
+            document.getElementById('success-story-message').innerText = level.successMsg;
+            
+            const stoneIcon = document.getElementById('success-stone-icon');
+            stoneIcon.innerHTML = `<i class="fa-solid ${level.stoneIcon}"></i>`;
+
+            document.getElementById('level-success-modal').classList.remove('hidden');
+        }
+
+        function nextLevel() {
+            playBeep(500, 0.1);
+            document.getElementById('level-success-modal').classList.add('hidden');
+
+            currentLevelIdx++;
+            currentQuestionIdx = 0;
+
+            if (currentLevelIdx >= LEVELS.length) {
+                triggerFinalVictory();
+            } else {
+                loadLevelUI();
+            }
+        }
+
+        function triggerGameOver(reason) {
+            gameActive = false;
+            clearInterval(timerInterval);
+            playBeep(120, 0.6, 'sawtooth');
+
+            document.getElementById('game-over-reason').innerText = reason;
+            document.getElementById('game-over-modal').classList.remove('hidden');
+        }
+
+        function triggerFinalVictory() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            playSuccessFanfare();
+
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            document.getElementById('final-time-stat').innerText = `${mins}m ${secs}s tersisa`;
+            
+            let heartsText = '';
+            for (let i = 0; i < hp; i++) heartsText += '❤️';
+            document.getElementById('final-hp-stat').innerText = `${heartsText} (${hp}/3)`;
+
+            document.getElementById('final-victory-modal').classList.remove('hidden');
+            spawnVictoryParticles();
+        }
+
+        function resetGame() {
+            playBeep(500, 0.1);
+            document.getElementById('game-over-modal').classList.add('hidden');
+            document.getElementById('final-victory-modal').classList.add('hidden');
+            document.getElementById('level-success-modal').classList.add('hidden');
+
+            startGame();
+        }
+
+        /* Background Canvas Floating Ember Particles */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = -Math.random() * 0.5 - 0.1;
+                this.alpha = Math.random() * 0.6 + 0.2;
+                this.color = Math.random() > 0.5 ? '#ffd54f' : '#38bdf8';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+                    this.reset();
+                    this.y = canvas.height;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 35; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+
+        function spawnVictoryParticles() {
+            for (let i = 0; i < 40; i++) {
+                const p = new Particle();
+                p.color = '#ffb300';
+                p.size = Math.random() * 3 + 1.5;
+                p.speedY = (Math.random() - 0.5) * 3;
+                p.speedX = (Math.random() - 0.5) * 3;
+                particles.push(p);
+            }
+        }
+
+        window.onload = function() {
+            resizeCanvas();
+            initParticles();
+            animateCanvas();
+            simulateLoading();
+        };
+    </script>
+</body>
+</html>
